@@ -3,7 +3,7 @@ import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
 import prettier from 'prettier';
 import parser from 'prettier/parser-babel';
 
-import './code-editor.css';
+import './styles.css';
 
 interface CodeEditorProps {
   initialValue: string,
