@@ -4,6 +4,7 @@ import 'bulmaswatch/superhero/bulmaswatch.min.css';
 import bundle from '../../bundler';
 import CodeEditor from '../CodeEditor';
 import Preview from '../Preview';
+import Resizable from '../Resizable';
 
 const CodeCell = () => {
   const [code, setCode] = useState('');
@@ -15,13 +16,14 @@ const CodeCell = () => {
   };
 
   return (
-    <section>
-      <CodeEditor initialValue='' onChange={(value) => setInput(value)}/>
-      <div>
-        <button onClick={onClick}>Submit</button>
-      </div>
-      <Preview code={code} />
-    </section>
+    <Resizable direction="vertical">
+      <section style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
+        <Resizable direction="horizontal">
+          <CodeEditor initialValue='' onChange={(value) => setInput(value)}/>
+        </Resizable>
+        <Preview code={code} />
+      </section>
+    </Resizable>
   );
 };
 

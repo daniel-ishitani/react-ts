@@ -1,12 +1,16 @@
 import { FC, useEffect, useRef } from 'react';
 
+import './styles.css';
+
 interface PreviewProps {
   code: string,
 };
 
 const html = `
   <html>
-    <head></head>
+    <head>
+      <style>html { background-color: white }</style>
+    </head>
     <body>
       <div id="root"></div>
       <script>
@@ -33,7 +37,16 @@ const Preview: FC<PreviewProps> = ({ code }) => {
     iframeRef.current.contentWindow.postMessage(code, '*');
   }, [code])
 
-  return <iframe title="bundled-code" ref={iframeRef} sandbox="allow-scripts" srcDoc={html} />
+  return (
+    <div className="preview-wrapper">
+      <iframe
+        title="bundled-code"
+        ref={iframeRef}
+        sandbox="allow-scripts"
+        srcDoc={html}
+      />
+    </div>
+  );
 }
 
 export default Preview;
