@@ -7,7 +7,7 @@ interface IconButtonProps {
 
 const IconButton: FC<IconButtonProps> = ({ onClick, iconClassName }) => {
   return (
-    <button onClick={onClick} className="button is-primary id-small">
+    <button onClick={onClick} className="button is-primary is-small">
       <span className="icon">
         <i className={iconClassName} />
       </span>
