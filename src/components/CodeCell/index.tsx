@@ -1,8 +1,8 @@
-import { useState, useEffect, FC } from 'react';
+import { useEffect, FC } from 'react';
 import 'bulmaswatch/superhero/bulmaswatch.min.css';
 
-import bundle from '../../bundler';
 import { Cell } from '../../redux/interfaces/cell';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 import useActions from '../../hooks/useActions';
 import CodeEditor from '../CodeEditor';
 import Preview from '../Preview';
@@ -13,19 +13,16 @@ interface CodeCellProps {
 }
 
 const CodeCell: FC<CodeCellProps> = ({ cell }) => {
-  const [code, setCode] = useState('');
-  const [err, setErr] = useState('');
-  const { updateCell } = useActions();
+  const { updateCell, bundleCode } = useActions();
+  const bundle = useTypedSelector((state) => state.bundles[cell.id]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const output = await bundle(cell.content);
-      setCode(output.code);
-      setErr(output.err);
+      bundleCode(cell.id, cell.content);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [cell.content]);
+  }, [cell.id, cell.content, bundleCode]);
 
   return (
     <Resizable direction="vertical">
@@ -33,7 +30,7 @@ const CodeCell: FC<CodeCellProps> = ({ cell }) => {
         <Resizable direction="horizontal">
           <CodeEditor initialValue={cell.content} onChange={value => updateCell(cell.id, value)}/>
         </Resizable>
-        <Preview code={code} err={err} />
+        {bundle && <Preview code={bundle.code} err={bundle.err} />}
       </section>
     </Resizable>
   );

@@ -1,12 +1,16 @@
-import { ActionTypes } from "../actionTypes";
+import { Dispatch } from 'react';
+
+import bundle from '../../bundler';
+import { ActionTypes } from '../actionTypes';
 import {
   UpdateCellAction,
   DeleteCellAction,
   MoveCellActions,
   InsertCellAfterAction,
   Direction,
-} from "../actions";
-import { CellType } from "../interfaces/cell";
+  Action,
+} from '../actions';
+import { CellType } from '../interfaces/cell';
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -44,3 +48,22 @@ export const insertCellAfter = (id: string | null, type: CellType): InsertCellAf
     },
   };
 };
+
+export const bundleCode = (cellId: string, input: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionTypes.BUNDLE_START,
+      payload: { cellId },
+    });
+
+    const result = await bundle(input);
+
+    dispatch({
+      type: ActionTypes.BUNDLE_COMPLETE,
+      payload: {
+        cellId,
+        bundle: result,
+      }
+    })
+  } 
+}
