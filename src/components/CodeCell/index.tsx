@@ -7,6 +7,7 @@ import useActions from '../../hooks/useActions';
 import CodeEditor from '../CodeEditor';
 import Preview from '../Preview';
 import Resizable from '../Resizable';
+import useCumulativeCode from './utils/useCumulativeCode';
 import './styles.css';
 
 interface CodeCellProps {
@@ -16,20 +17,21 @@ interface CodeCellProps {
 const CodeCell: FC<CodeCellProps> = ({ cell }) => {
   const { updateCell, bundleCode } = useActions();
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
+  const cumulativeCode = useCumulativeCode(cell.id);
 
   useEffect(() => {
     if (!bundle) {
-      bundleCode(cell.id, cell.content);
+      bundleCode(cell.id, cumulativeCode);
       return;
     }
 
     const timer = setTimeout(async () => {
-      bundleCode(cell.id, cell.content);
+      bundleCode(cell.id, cumulativeCode);
     }, 500);
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line
-  }, [cell.id, cell.content, bundleCode]);
+  }, [cell.id, cumulativeCode, bundleCode]);
 
   const loadingProgress = (
     <div className="progress-cover">
